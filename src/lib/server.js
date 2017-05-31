@@ -11,12 +11,10 @@ module.exports = class Server {
 		this.directory = path.join(serversDir, serverName);
 	}
 
-	static async createServer(name, jar, options = {}) {
+	static createServer(name, jar, options = {}) {
 
 		const jarPath = path.join(jarsDir, jar);
 		const serverDir = path.join(serversDir, name);
-
-		console.log('Create server', jarPath, serverDir);
 
 		// Check if server already exists
 		return fs.pathExists(serverDir)
