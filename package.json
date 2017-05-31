@@ -1,0 +1,35 @@
+{
+  "name": "cb-craft.net",
+  "version": "2.0.0",
+  "description": "Control panel for my videogame servers. Allow my friends to access some parts too.",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/michaelgira23/Cb-craft.net.git"
+  },
+  "keywords": [
+    "minecraft",
+    "control",
+    "panel"
+  ],
+  "author": "Michael Gira",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/michaelgira23/Cb-craft.net/issues"
+  },
+  "homepage": "https://github.com/michaelgira23/Cb-craft.net#readme",
+  "dependencies": {
+    "fs-extra": "^3.0.1",
+    "request": "^2.81.0",
+    "scriptserver": "^0.1.5",
+    "scriptserver-command": "^0.1.2",
+    "scriptserver-essentials": "^0.1.7",
+    "scriptserver-event": "^0.1.0",
+    "scriptserver-json": "^0.1.0",
+    "scriptserver-update": "^1.0.1",
+    "scriptserver-util": "^0.1.1"
+  }
+}
