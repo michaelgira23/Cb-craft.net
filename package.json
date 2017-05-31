@@ -23,7 +23,7 @@
   "homepage": "https://github.com/michaelgira23/Cb-craft.net#readme",
   "dependencies": {
     "fs-extra": "^3.0.1",
-    "request": "^2.81.0",
+    "request-promise-native": "^1.0.4",
     "scriptserver": "kyob1010/scriptserver",
     "scriptserver-command": "^0.1.2",
     "scriptserver-essentials": "^0.1.7",
