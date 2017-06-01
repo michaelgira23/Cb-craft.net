@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/michaelgira23/Cb-craft.net#readme",
   "dependencies": {
+    "cheerio": "^1.0.0-rc.1",
     "fs-extra": "^3.0.1",
     "request-promise-native": "^1.0.4",
     "scriptserver": "kyob1010/scriptserver",

@@ -21,16 +21,18 @@
 // 	mc.start();
 // }
 
-const vanilla = require('./lib/jar-acquisition/atlauncher');
+const vanilla = require('./lib/jar-acquisition/technic');
 
 main();
 async function main() {
 	try {
-		const versions = await vanilla.getVersions();
+		const versions = await vanilla.searchModpacks('cbcraft');
 		console.log('Versions', versions);
 
-		const downloadUrl = await vanilla.getDownloadUrl('SkyFactory');
+		const downloadUrl = await vanilla.getDownloadUrl('attack-of-the-bteam');
 		console.log('Download for modpack', downloadUrl);
+		const cbcraftUrl = await vanilla.getDownloadUrl('cbcraft-modpack');
+		console.log('Download for modpack', cbcraftUrl);
 	} catch (err) {
 		console.log('Get server jars error!', err);
 	}
