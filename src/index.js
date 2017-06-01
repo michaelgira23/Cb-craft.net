@@ -21,16 +21,16 @@
 // 	mc.start();
 // }
 
-const vanilla = require('./lib/jar-acquisition/vanilla');
+const vanilla = require('./lib/jar-acquisition/atlauncher');
 
 main();
 async function main() {
 	try {
-		// const versions = await vanilla.getVersions();
-		// console.log('Versions', versions);
+		const versions = await vanilla.getVersions();
+		console.log('Versions', versions);
 
-		const downloadUrl = await vanilla.getDownloadUrl('1.11.2');
-		console.log('Download for 1.11.2', downloadUrl);
+		const downloadUrl = await vanilla.getDownloadUrl('SkyFactory');
+		console.log('Download for modpack', downloadUrl);
 	} catch (err) {
 		console.log('Get server jars error!', err);
 	}

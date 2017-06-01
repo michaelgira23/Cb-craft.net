@@ -28,7 +28,7 @@ function getDownloadUrl(id) {
 					return version.url;
 				}
 			}
-			throw `Minecraft version ${id} not found!`
+			throw `Minecraft version ${id} not found!`;
 		})
 		.then(url => request(url))
 		.then(JSON.parse)
