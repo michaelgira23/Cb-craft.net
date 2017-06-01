@@ -1,3 +1,7 @@
+/**
+ * For downloading modpack servers from the ATLauncher
+ */
+
 const request = require('request-promise-native');
 
 const baseUrl = 'https://api.atlauncher.com/v1';
@@ -21,14 +25,17 @@ function getVersions() {
 		});
 }
 
-function getDownloadUrl(id) {
-	return request(`${baseUrl}/pack/${id}/latest`)
+function getDownloadUrl(id, version = 'latest') {
+	return request(`${baseUrl}/pack/${id}/${version}`)
 		.then(JSON.parse)
 		.then(body => {
 			if (!body.data.serverZipURL) {
-				throw `No server download found for modpack ${id}!`;
+				throw `No server download found for modpack "${id}"!`;
 			}
-			return body.data.serverZipURL;
+			return {
+				version: body.data.version,
+				url: body.data.serverZipURL
+			};
 		});
 }
 

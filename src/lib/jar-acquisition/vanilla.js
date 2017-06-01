@@ -1,3 +1,7 @@
+/**
+ * For downloading servers for Vanilla Minecraft
+ */
+
 const request = require('request-promise-native');
 
 const versionsEndpoint = 'https://launchermeta.mojang.com/mc/game/version_manifest.json';
@@ -20,19 +24,30 @@ function getVersions() {
 		});
 }
 
-function getDownloadUrl(id) {
+function getDownloadUrl(version = 'latest') {
 	return getVersionsManifest()
 		.then(body => {
-			for (const version of body.versions) {
-				if (version.id === id) {
-					return version.url;
+
+			// If version equals 'latest,' get most recent release version
+			if (version === 'latest') {
+				version = body.latest.release;
+			}
+
+			for (const mcVersion of body.versions) {
+				if (mcVersion.id === version) {
+					return mcVersion.url;
 				}
 			}
-			throw `Minecraft version ${id} not found!`;
+			throw `Minecraft version "${version}" not found!`;
 		})
 		.then(url => request(url))
 		.then(JSON.parse)
-		.then(body => body.downloads.server.url);
+		.then(body => {
+			return {
+				version: body.id,
+				url: body.downloads.server.url
+			};
+		});
 }
 
 function getVersionsManifest() {

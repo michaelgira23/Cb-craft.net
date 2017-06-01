@@ -1,3 +1,7 @@
+/**
+ * For downloading modpack servers from the Technic Launcher
+ */
+
 const cheerio = require('cheerio');
 const request = require('request-promise-native');
 
@@ -34,6 +38,9 @@ function getDownloadUrl(id) {
 	return request(`https://technicpack.net/modpack/${id}`)
 		.then(cheerio.load)
 		.then($ => {
+
+			const version = $('.modpack-title h1 small').text().replace('Version', '').trim();
+
 			let downloadUrl = null;
 			$('.sidebar-controls a').each((index, elem) => {
 				const button = $(elem);
@@ -44,10 +51,13 @@ function getDownloadUrl(id) {
 			});
 
 			if (!downloadUrl) {
-				throw `There is no download button for modpack ${id}!`;
+				throw `There is no download button for modpack "${id}"!`;
 			}
 
-			return downloadUrl;
+			return {
+				version,
+				url: downloadUrl
+			};
 		});
 }
 
