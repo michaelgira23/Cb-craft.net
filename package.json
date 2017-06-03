@@ -4,6 +4,7 @@
   "description": "Control panel for my videogame servers. Allow my friends to access some parts too.",
   "main": "src/index.js",
   "scripts": {
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,12 +27,14 @@
     "fs-extra": "^3.0.1",
     "request": "^2.81.0",
     "request-promise-native": "^1.0.4",
+    "sc-hot-reboot": "^1.0.0",
     "scriptserver": "kyob1010/scriptserver",
     "scriptserver-command": "^0.1.2",
     "scriptserver-essentials": "^0.1.7",
     "scriptserver-event": "^0.1.0",
     "scriptserver-json": "michaelgira23/scriptserver-json",
     "scriptserver-update": "^1.0.1",
-    "scriptserver-util": "^0.1.1"
+    "scriptserver-util": "^0.1.1",
+    "socketcluster": "^5.13.1"
   }
 }

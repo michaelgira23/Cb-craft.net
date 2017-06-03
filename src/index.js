@@ -1,36 +1,34 @@
-// const Server = require('./lib/server');
-//
-// main();
-// async function main() {
-// 	let mc;
-// 	try {
-// 		mc = await Server.createServer('vanilla-server', 'vanilla/1.11.2.jar');
-// 		console.log('Created server!', mc);
-// 	} catch (err) {
-// 		console.log('Create server error!', err);
-// 		if (err !== 'Server name already exists!') {
-// 			console.log('Create server error!', err);
-// 			return;
-// 		} else {
-// 			console.log('Server already exists!');
-// 		}
-//
-// 		mc = new Server('vanilla-server');
-// 	}
-//
-// 	mc.start();
-// }
+const port = 1555;
 
-// const vanilla = require('./lib/jar-acquisition/technic');
+let config;
+try {
+	config = require('./config');
+} catch (err) {
+	if (err.message === 'Cannot find module \'./config\'') {
+		throw new Error('***Please create a config.js on your local system! Refer to /src/lib/congif.example.js!***');
+	} else {
+		throw err;
+	}
+}
 
-const downloadJar = require('./lib/download-jar');
+const path = require('path');
+const { SocketCluster } = require('socketcluster');
+const scHotReboot = require('sc-hot-reboot');
 
-// downloadJar.ensureJarDownloaded('vanilla', 'minecraft', 'latest')
-downloadJar.ensureJarDownloaded('technic', 'attack-of-the-bteam', 'latest')
-// downloadJar.ensureJarDownloaded('atlauncher', 'SkyFactory', 'latest')
-	.then(data => {
-		console.log('All done!', data);
-	})
-	.catch(err => {
-		console.log('Download jar error!', err);
+const socketCluster = new SocketCluster({
+	workers: 1,
+	port,
+	appName: 'cbcraft',
+	wsEngine: 'uws',
+	workerController: path.join(__dirname, 'worker.js'),
+	// Whether or not to reboot the worker in case it crashes (defaults to true)
+	rebootWorkerOnCrash: true
+});
+
+if (!config.production) {
+	// If dev environment, add hot reboot
+	console.log(`Watching for code changes in directory: ${__dirname}`);
+	scHotReboot.attach(socketCluster, {
+		cwd: __dirname
 	});
+}
