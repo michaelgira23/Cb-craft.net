@@ -59,5 +59,6 @@ function writeToDb(json) {
 module.exports = {
 	isUnique,
 	pushToArray,
-	getDb
+	getDb,
+	writeToDb
 };

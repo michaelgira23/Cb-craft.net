@@ -36,17 +36,24 @@ if (!config.production) {
 */
 
 const auth = require('./lib/auth');
-auth.createUser('Ccoolboy', 'Michael')
+// auth.createUser('Ccoolboy', 'Michael')
+// 	.then(data => {
+// 		console.log(data);
+// 	})
+// 	.catch(err => {
+// 		console.log('Problem with creating user!', err);
+// 	});
+auth.login('Ccoolboy', 'asdf')
 	.then(data => {
-		console.log(data);
+		console.log('Login', data);
 	})
 	.catch(err => {
-		console.log('Problem with creating user!', err);
+		console.log('Get credentials error', err);
 	});
-// auth.login('michael', 'fds')
+// auth.changePassword('Ccoolboy', 'asdf')
 // 	.then(data => {
 // 		console.log('Login', data);
 // 	})
 // 	.catch(err => {
-// 		console.log('Get credentials error');
+// 		console.log('Change password error', err);
 // 	});
