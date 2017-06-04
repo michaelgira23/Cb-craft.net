@@ -9,6 +9,10 @@ module.exports.run = worker => {
 	scServer.on('connection', socket => {
 		console.log('Socket connected! :D');
 
+		socket.on('login', (credentials, respond) => {
+
+		});
+
 		socket.on('disconnect', () => {
 			console.log('Socket disconnect! ;-;');
 		});

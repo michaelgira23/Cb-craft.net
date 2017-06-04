@@ -1,3 +1,7 @@
+/**
+ * For actually controlling the different Minecraft servers
+ */
+
 const fs = require('fs-extra');
 const path = require('path');
 
