@@ -1,4 +1,3 @@
-/*
 const port = 1555;
 
 let config;
@@ -33,27 +32,3 @@ if (!config.production) {
 		cwd: __dirname
 	});
 }
-*/
-
-const auth = require('./lib/auth');
-// auth.createUser('Ccoolboy', 'Michael')
-// 	.then(data => {
-// 		console.log(data);
-// 	})
-// 	.catch(err => {
-// 		console.log('Problem with creating user!', err);
-// 	});
-auth.login('Ccoolboy', 'asdf')
-	.then(data => {
-		console.log('Login', data);
-	})
-	.catch(err => {
-		console.log('Get credentials error', err);
-	});
-// auth.changePassword('Ccoolboy', 'asdf')
-// 	.then(data => {
-// 		console.log('Login', data);
-// 	})
-// 	.catch(err => {
-// 		console.log('Change password error', err);
-// 	});

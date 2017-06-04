@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const database = require('./database');
 
-async function createUser(ign, name, password = null) {
+async function createUser(ign, name, password = null, scopes = []) {
 	if (typeof ign !== 'string') {
 		return Promise.reject('Invalid IGN!');
 	}
@@ -26,7 +26,7 @@ async function createUser(ign, name, password = null) {
 
 	const hashedPassword = await hashPassword(password);
 
-	return database.pushToArray('users', { ign, name, password: hashedPassword })
+	return database.pushToArray('users', { ign, name, password: hashedPassword, scopes })
 		.then(() => {
 			// Return normal password, not hashed
 			return { ign, name, password };
@@ -37,7 +37,8 @@ function login(ign, password) {
 	return getUser(ign)
 		.then(async user => {
 			if (user && await bcrypt.compare(password, user.password)) {
-				return true;
+				delete user.password;
+				return user;
 			} else {
 				throw 'Invalid username/password!';
 			}
