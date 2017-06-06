@@ -1,4 +1,4 @@
-/*const port = 1555;
+const port = 1555;
 
 let config;
 try {
@@ -31,15 +31,4 @@ if (!config.production) {
 	scHotReboot.attach(socketCluster, {
 		cwd: __dirname
 	});
-}*/
-
-const Server = require('./lib/server');
-
-main();
-async function main() {
-	// const server = await Server.init('vanilla-server');
-	// console.log(server.properties.get());
-	// console.log(server.properties.get('motd'));
-	// await server.properties.set('spawn-protection', 1);
-	const server = await Server.create('testerino', 'vanilla/1.11.2.jar');
 }

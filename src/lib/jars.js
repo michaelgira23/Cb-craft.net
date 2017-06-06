@@ -13,26 +13,30 @@ const atlauncher = require('./jar-acquisition/atlauncher');
 
 const jarsDir = path.join(__dirname, '..', '..', 'data', 'jars');
 
-async function ensureJarDownloaded(type, id, version) {
+async function ensureJarDownloaded(origin, id, version) {
 
 	let jarDownload;
 	let jarDownloadDir;
 	let jarDownloadPath;
 
-	if (type === 'vanilla') {
-		jarDownload = await vanilla.getDownloadUrl(version);
-		jarDownloadDir = path.join(jarsDir, 'vanilla');
-		jarDownloadPath = path.join(jarDownloadDir, `${jarDownload.version}.jar`);
-	} else if (type === 'technic') {
-		jarDownload = await technic.getDownloadUrl(id);
-		jarDownloadDir = path.join(jarsDir, 'technic', id);
-		jarDownloadPath = path.join(jarDownloadDir, `${jarDownload.version}.jar`);
-	} else if (type === 'atlauncher') {
-		jarDownload = await atlauncher.getDownloadUrl(id, version);
-		jarDownloadDir = path.join(jarsDir, 'atlauncher', id);
-		jarDownloadPath = path.join(jarDownloadDir, `${jarDownload.version}.jar`);
-	} else {
-		return Promise.reject(`Invalid type "${type}"!`);
+	switch (origin) {
+		case 'vanilla':
+			jarDownload = await vanilla.getDownloadUrl(version);
+			jarDownloadDir = path.join(jarsDir, 'vanilla');
+			jarDownloadPath = path.join(jarDownloadDir, `${jarDownload.version}.jar`);
+			break;
+		case 'technic':
+			jarDownload = await technic.getDownloadUrl(id);
+			jarDownloadDir = path.join(jarsDir, 'technic', id);
+			jarDownloadPath = path.join(jarDownloadDir, `${jarDownload.version}.jar`);
+			break;
+		case 'atlauncher':
+			jarDownload = await atlauncher.getDownloadUrl(id, version);
+			jarDownloadDir = path.join(jarsDir, 'atlauncher', id);
+			jarDownloadPath = path.join(jarDownloadDir, `${jarDownload.version}.jar`);
+			break;
+		default:
+			return Promise.reject(`Invalid type "${type}"!`);
 	}
 
 	// Check if server jar is already cached
@@ -66,6 +70,20 @@ async function ensureJarDownloaded(type, id, version) {
 	});
 }
 
+async function queryJars(origin, query) {
+	switch (origin) {
+		case 'vanilla':
+			return await vanilla.getVersions();
+		case 'technic':
+			return await technic.searchModpacks(query);
+		case 'atlauncher':
+			return await atlauncher.getVersions();
+		default:
+			return [];
+	}
+}
+
 module.exports = {
-	ensureJarDownloaded
+	ensureJarDownloaded,
+	queryJars
 };
