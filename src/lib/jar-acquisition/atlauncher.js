@@ -15,6 +15,7 @@ function getVersions() {
 				packs.push({
 					id: pack.safeName,
 					name: pack.name,
+					origin: 'atlauncher',
 					tags: [
 						'modpack',
 						'atlauncher'

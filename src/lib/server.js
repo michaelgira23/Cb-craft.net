@@ -4,6 +4,7 @@
 
 const fs = require('fs-extra');
 const path = require('path');
+const ServerProperties = require('./server-properties');
 
 const ScriptServer = require('scriptserver');
 const scriptServerModules = [
@@ -15,8 +16,8 @@ const scriptServerModules = [
 	require('scriptserver-update')
 ];
 
-const jarsDir = path.join(__dirname, '..', '..', 'jars');
-const serversDir = path.join(__dirname, '..', '..', 'servers');
+const jarsDir = path.join(__dirname, '..', '..', 'data', 'jars');
+const serversDir = path.join(__dirname, '..', '..', 'data', 'servers');
 const templateDir = path.join(__dirname, '..', '..', 'server-template');
 
 module.exports = class Server {
@@ -80,9 +81,17 @@ module.exports = class Server {
 		});
 	}
 
+	// Basically constructor, but asynchronous
+	async setup() {
+		this.properties = await ServerProperties.init(this);
+	}
+
 	start() {
 		if (!this.running) {
-			this.scriptServer.start(path.join(this.directory, 'server.jar'), [`-Xms${this.minGb}G`, `-Xmx${this.maxGb}G`]);
+			this.scriptServer.start(
+				path.join(this.directory, 'server.jar'),
+				[`-Xms${this.minGb}G`, `-Xmx${this.maxGb}G`]
+			);
 		}
 		this.running = true;
 	}
@@ -99,7 +108,13 @@ module.exports = class Server {
 		this.start();
 	}
 
-	static createServer(name, jar, options = {}) {
+	static async init(serverName, options = {}) {
+		const server = new Server(serverName, options);
+		await server.setup();
+		return server;
+	}
+
+	static create(name, jar, options = {}) {
 
 		const jarPath = path.join(jarsDir, jar);
 		const serverDir = path.join(serversDir, name);
@@ -123,7 +138,7 @@ module.exports = class Server {
 			// Copy over jar
 			.then(() => fs.copy(jarPath, path.join(serverDir, 'server.jar')))
 			// Return server object
-			.then(() => new Server(name));
+			.then(() => Server.init(name, options));
 	}
 
 }

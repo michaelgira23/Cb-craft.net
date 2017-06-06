@@ -14,6 +14,7 @@ function getVersions() {
 				versions.push({
 					id: version.id,
 					name: `Vanilla Minecraft ${version.id}`,
+					origin: 'vanilla',
 					tags: [
 						'vanilla',
 						version.type

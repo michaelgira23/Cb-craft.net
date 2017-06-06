@@ -1,8 +1,4 @@
 /node_modules
 
-/jars
-/servers
-/worlds
-
+/data
 config.js
-/"database".json

@@ -24,6 +24,7 @@ function searchModpacks(queryString) {
 				packs.push({
 					id: pack.slug,
 					name: pack.name,
+					origin: 'technic',
 					tags: [
 						'modpack',
 						'technic'

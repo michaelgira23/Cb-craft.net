@@ -11,7 +11,7 @@ const vanilla = require('./jar-acquisition/vanilla');
 const technic = require('./jar-acquisition/technic');
 const atlauncher = require('./jar-acquisition/atlauncher');
 
-const jarsDir = path.join(__dirname, '..', '..', 'jars');
+const jarsDir = path.join(__dirname, '..', '..', 'data', 'jars');
 
 async function ensureJarDownloaded(type, id, version) {
 
