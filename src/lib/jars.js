@@ -75,7 +75,12 @@ async function queryJars(origin, query) {
 		case 'vanilla':
 			return await vanilla.getVersions();
 		case 'technic':
-			return await technic.searchModpacks(query);
+			console.log('get techinc packs', query);
+			if (query === '') {
+				return await technic.popularModpacks();
+			} else {
+				return await technic.searchModpacks(query);
+			}
 		case 'atlauncher':
 			return await atlauncher.getVersions();
 		default:

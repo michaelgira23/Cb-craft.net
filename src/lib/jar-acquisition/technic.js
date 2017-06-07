@@ -4,6 +4,7 @@
 
 const cheerio = require('cheerio');
 const request = require('request-promise-native');
+const URL = require('url').URL;
 
 const baseUrl = '';
 // From what I can tell, this is arbitrary and can be anything.
@@ -40,6 +41,32 @@ function searchModpacks(queryString) {
 		});
 }
 
+function popularModpacks() {
+	console.log('get popular modpacks');
+	return request(`https://technicpack.net/modpacks/sort-by/popular`)
+		.then(cheerio.load)
+		.then($ => {
+			const packs = [];
+			$('.modpack-items.grid .grid-item').each((index, elem) => {
+				const link = $(elem).find('a').attr('href');
+				const parsedLink = new URL(link);
+				const pathnameParts = parsedLink.pathname.split('/');
+				const id = pathnameParts[pathnameParts.length - 1].split('.')[0];
+
+				packs.push({
+					id,
+					name: beautifyTechnicId(id),
+					origin: 'technic',
+					tags: [
+						'modpack',
+						'technic'
+					]
+				});
+			});
+			return packs;
+		});
+}
+
 function getDownloadUrl(id) {
 	return request(`https://technicpack.net/modpack/${id}`)
 		.then(cheerio.load)
@@ -67,7 +94,19 @@ function getDownloadUrl(id) {
 		});
 }
 
+// Try to format technic id as close as possible to name
+function beautifyTechnicId(id) {
+	return id
+		// Split up words url
+		.split('-')
+		// Capitalize each word
+		.map(str => str[0].toUpperCase() + str.slice(1))
+		// Join array back together with spaces
+		.join(' ');
+}
+
 module.exports = {
 	searchModpacks,
+	popularModpacks,
 	getDownloadUrl
 };

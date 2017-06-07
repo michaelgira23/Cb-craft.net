@@ -36,6 +36,7 @@ module.exports.run = worker => {
 			try {
 				res(null, await jars.queryJars(origin, query));
 			} catch (err) {
+				console.log('Search error', err);
 				res(err);
 			}
 		});
