@@ -20,6 +20,11 @@ function searchModpacks(queryString) {
 		.then(JSON.parse)
 		.then(body => {
 			const packs = [];
+
+			if (body.error) {
+				throw body.error;
+			}
+
 			for (const pack of body.modpacks) {
 				packs.push({
 					id: pack.slug,
