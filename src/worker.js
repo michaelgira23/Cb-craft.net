@@ -13,10 +13,8 @@ module.exports.run = worker => {
 		console.log('Socket connected! :D', socket.authToken);
 
 		socket.on('login', (credentials, res) => {
-			console.log('login', credentials);
 			auth.login(credentials.ign, credentials.password)
 				.then(user => {
-					console.log('Login successful', user);
 					res(null);
 					// Generate JWT
 					socket.setAuthToken({
@@ -35,7 +33,6 @@ module.exports.run = worker => {
 		});
 
 		socket.on('search', async ({ origin = 'vanilla', query = '' }, res) => {
-			console.log('Backend search', origin, query);
 			try {
 				res(null, await jars.queryJars(origin, query));
 			} catch (err) {
