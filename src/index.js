@@ -21,6 +21,7 @@ const socketCluster = new SocketCluster({
 	appName: 'cbcraft',
 	wsEngine: 'uws',
 	workerController: path.join(__dirname, 'worker.js'),
+	authKey: config.authKey,
 	// Whether or not to reboot the worker in case it crashes (defaults to true)
 	rebootWorkerOnCrash: true
 });

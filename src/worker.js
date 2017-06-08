@@ -32,7 +32,7 @@ module.exports.run = worker => {
 			console.log('Socket disconnect! ;-;');
 		});
 
-		socket.on('search', async ({ origin = 'vanilla', query = '' }, res) => {
+		socket.on('jars.search', async ({ origin = 'vanilla', query = '' }, res) => {
 			try {
 				res(null, await jars.queryJars(origin, query));
 			} catch (err) {
@@ -40,5 +40,36 @@ module.exports.run = worker => {
 				res(err);
 			}
 		});
+
+		socket.on('jars.download', async ({ origin, id }, res) => {
+			console.log('Download jar', origin, id);
+			try {
+				let responded = false;
+				let version;
+				await jars.ensureJarDownloaded(origin, id, (downloadVersion, progress) => {
+					version = downloadVersion;
+					if (!responded) {
+						responded = true;
+						res(null);
+					}
+					console.log('Download progress', progress);
+					scServer.exchange.publish('jars.status', {
+						action: 'progress',
+						data: { origin, id, version, progress }
+					});
+				});
+
+				scServer.exchange.publish('jars.status', {
+					action: 'complete',
+					data: { origin, id, version, progress: null }
+				});
+
+				console.log('Download complete!');
+			} catch (err) {
+				console.log('Download jars error', err);
+				res(err);
+			}
+		});
+
 	});
 };
