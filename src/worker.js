@@ -46,7 +46,8 @@ module.exports.run = worker => {
 			try {
 				let responded = false;
 				let version;
-				await jars.ensureJarDownloaded(origin, id, (downloadVersion, progress) => {
+
+				jars.ensureJarDownloaded(origin, id, (downloadVersion, progress) => {
 					version = downloadVersion;
 					if (!responded) {
 						responded = true;
@@ -57,12 +58,18 @@ module.exports.run = worker => {
 						action: 'progress',
 						data: { origin, id, version, progress }
 					});
-				});
+				})
+					.then(download => {
+						if (!responded) {
+							responded = true;
+							res(null);
+						}
 
-				scServer.exchange.publish('jars.status', {
-					action: 'complete',
-					data: { origin, id, version, progress: null }
-				});
+						scServer.exchange.publish('jars.status', {
+							action: 'complete',
+							data: { origin, id, version: download.version, progress: null }
+						});
+					});
 
 				console.log('Download complete!');
 			} catch (err) {

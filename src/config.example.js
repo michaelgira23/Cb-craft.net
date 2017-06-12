@@ -7,5 +7,5 @@ module.exports =
 {
 	production: false,
 	// Key to sign JWT tokens
-	authkey ''
+	authkey: ''
 };

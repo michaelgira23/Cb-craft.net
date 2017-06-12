@@ -84,7 +84,7 @@ function getDownloadUrl(id) {
 			});
 
 			if (!downloadUrl) {
-				throw `There is no download button for modpack "${id}"!`;
+				throw `No server download for modpack "${id}"!`;
 			}
 
 			return {

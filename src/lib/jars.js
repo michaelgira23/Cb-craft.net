@@ -42,7 +42,7 @@ async function ensureJarDownloaded(origin, id, onProgressChange = () => {}) {
 
 	// Check if server jar is already cached
 	if (await fs.pathExists(jarDownloadPath)) {
-		return Promise.resolve(jarDownloadPath);
+		return Promise.resolve({ version: jarDownload.version, path: jarDownloadPath });
 	}
 
 	// Ensure directory is there
@@ -60,7 +60,7 @@ async function ensureJarDownloaded(origin, id, onProgressChange = () => {}) {
 					throw err;
 				})
 				.on('end', () => {
-					resolve(jarDownloadPath);
+					resolve({ version: jarDownload.version, path: jarDownloadPath });
 				})
 				.pipe(fs.createWriteStream(jarDownloadPath));
 
