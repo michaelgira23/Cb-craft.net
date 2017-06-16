@@ -5,7 +5,7 @@
 const fs = require('fs-extra');
 const path = require('path');
 
-const dbDir = path.join(__dirname, '..', '..', 'data', '"database".json');
+const dbDir = path.join(__dirname, '..', '..', 'data', 'database.json');
 
 function isUnique(property, values) {
 	return getDb()
