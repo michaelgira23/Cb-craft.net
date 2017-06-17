@@ -16,7 +16,7 @@ async function createUser(ign, name, password = null, scopes = []) {
 	}
 
 	// If no password, default to a random 5-digit hex code
-	if (typeof password !== 'string') {
+	if (typeof password !== 'string' || password.length < 1) {
 		password = await generateRandomHex(5);
 	}
 
@@ -56,17 +56,22 @@ function changePassword(ign, newPassword) {
 		})
 }
 
-function getUser(ign) {
+function getUsers() {
 	return database.getDb()
-		.then(db => {
-			let user = null;
-			for (const dbUser of db.users) {
-				if (dbUser.ign === ign) {
-					user = dbUser;
+		.then(db => db.users);
+}
+
+function getUser(ign) {
+	return getUsers()
+		.then(users => {
+			let targetUser = null;
+			for (const user of users) {
+				if (user.ign === ign) {
+					targetUser = user;
 					break;
 				}
 			}
-			return user;
+			return targetUser;
 		});
 }
 
@@ -101,5 +106,7 @@ function generateRandomHex(length) {
 module.exports = {
 	createUser,
 	login,
-	changePassword
+	changePassword,
+	getUsers,
+	getUser
 };

@@ -32,50 +32,101 @@ module.exports.run = worker => {
 			console.log('Socket disconnect! ;-;');
 		});
 
-		socket.on('jars.search', async ({ origin = 'vanilla', query = '' }, res) => {
-			try {
-				res(null, await jars.queryJars(origin, query));
-			} catch (err) {
-				console.log('Search error', err);
-				res(err);
-			}
+		/**
+		 * Downloading jars
+		 */
+
+		socket.on('jars.search', ({ origin = 'vanilla', query = '' }, res) => {
+			jars.queryJars(origin, query)
+				.then(results => {
+					res(null, results);
+				})
+				.catch(err => {
+					res(err);
+				});
 		});
 
-		socket.on('jars.download', async ({ origin, id }, res) => {
+		socket.on('jars.download', ({ origin, id }, res) => {
 			console.log('Download jar', origin, id);
-			try {
-				let responded = false;
-				let version;
 
-				jars.ensureJarDownloaded(origin, id, (downloadVersion, progress) => {
-					version = downloadVersion;
+			let responded = false;
+			let version;
+
+			jars.ensureJarDownloaded(origin, id, (downloadVersion, progress) => {
+				version = downloadVersion;
+				if (!responded) {
+					responded = true;
+					res(null);
+				}
+				console.log('Download progress', progress);
+				scServer.exchange.publish('jars.status', {
+					action: 'progress',
+					data: { origin, id, version, progress }
+				});
+			})
+				.then(download => {
 					if (!responded) {
 						responded = true;
 						res(null);
 					}
-					console.log('Download progress', progress);
+
 					scServer.exchange.publish('jars.status', {
-						action: 'progress',
-						data: { origin, id, version, progress }
+						action: 'complete',
+						data: { origin, id, version: download.version, progress: null }
 					});
 				})
-					.then(download => {
-						if (!responded) {
-							responded = true;
-							res(null);
-						}
+				.catch(err => {
+					console.log('Download jars error', err);
+					res(err);
+				});
+		});
 
-						scServer.exchange.publish('jars.status', {
-							action: 'complete',
-							data: { origin, id, version: download.version, progress: null }
-						});
-					});
+		/**
+		 * Admin stuff
+		 */
 
-				console.log('Download complete!');
-			} catch (err) {
-				console.log('Download jars error', err);
-				res(err);
+		socket.on('admin.canCreateAdmin', (data, res) => {
+			auth.getUsers()
+				.then(users => {
+					res(null, users.length < 1);
+				})
+				.catch(err => {
+					res(err);
+				});
+		});
+
+		socket.on('admin.createUser', async (info, res) => {
+
+			// Check if admin
+			const scopes = info.scopes || [];
+			if (!socket.authToken || !socket.authToken.scopes.includes('admin')) {
+				let users;
+				try {
+					users = await auth.getUsers();
+				} catch (err) {
+					res(err);
+					return;
+				}
+
+				// If no users, allow this user to be created and make this user admin
+				if (users.length > 0) {
+					res('You do not have sufficient permissions!');
+					return;
+				}
+
+				// Make sure this user is admin
+				if (!scopes.includes('admin')) {
+					scopes.push('admin');
+				}
 			}
+
+			auth.createUser(info.ign, info.name, info.password, scopes)
+				.then(user => {
+					res(null, user);
+				})
+				.catch(err => {
+					res(err);
+				});
 		});
 
 	});
